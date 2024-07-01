@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-
-
 namespace Architecture.StateSystem
 {
 	/// <summary>

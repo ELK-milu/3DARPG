@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using UnityEngine.Rendering;
-
-namespace UnityUtils {
+﻿namespace UnityUtils {
     public static class ResourcesUtils {
         
         /*

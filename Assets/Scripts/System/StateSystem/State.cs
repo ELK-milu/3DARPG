@@ -1,6 +1,3 @@
-using System.Collections;
-using UnityEngine;
-using UnityEngine.Pool;
 namespace StatePattern.StateSystem
 {
 	/// <summary>

@@ -1,9 +1,5 @@
-﻿using EventPattern.AbilityEvent;
-using EventPattern.EventSystem;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using Utilities;
 
 namespace Architecture.AbilitySystem
 {

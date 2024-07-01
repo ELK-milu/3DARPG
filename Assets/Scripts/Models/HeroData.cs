@@ -1,7 +1,5 @@
 ﻿using EventPattern.EventSystem;
 using EventPattern.PlayerEvent;
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Character.Hero
