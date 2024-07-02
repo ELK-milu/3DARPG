@@ -7,7 +7,7 @@ namespace Architecture.AbilitySystem
 	/// 管理所有能力的模型类
 	/// </summary>
 	[DefaultExecutionOrder(-1999)]
-	public class AbilityModel : MVCModel<AbilityData,Ability>
+	public class AbilityModel : MvcModel<AbilityData,Ability>
 	{
 
 	}

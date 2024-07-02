@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -11,7 +12,7 @@ public class Liquid : MonoBehaviour
     [SerializeField]
     float WobbleSpeedMove = 1f;
     [SerializeField]
-    float fillAmount = 0.5f;
+    protected float fillAmount = 50f;
     [SerializeField]
     float Recovery = 1f;
     [SerializeField]
@@ -47,6 +48,25 @@ public class Liquid : MonoBehaviour
         GetMeshAndRend();
     }
 
+    protected Tweener FillTween = null;
+    public virtual void DOFill(int addition)
+    {
+        // 圆形是-13~112，映射到100~0
+        if (FillTween != null)
+        {
+            DOTween.Kill(FillTween);
+            DOFill(addition);
+        }
+        else
+        {
+            FillTween =DOTween.To(() => fillAmount, x => fillAmount = x, fillAmount+addition, 1).SetEase(Ease.Linear)
+                .OnComplete(() =>
+                {
+                    FillTween = null;
+                });
+        }
+    }
+    
     void GetMeshAndRend()
     {
         if (mesh == null)
@@ -131,11 +151,11 @@ public class Liquid : MonoBehaviour
                 comp = (worldPos - new Vector3(0, GetLowestPoint(), 0));
             }
 
-            pos = worldPos - transform.position - new Vector3(0, fillAmount - (comp.y * CompensateShapeAmount), 0);
+            pos = worldPos - transform.position - new Vector3(0, (fillAmount - (comp.y * CompensateShapeAmount))/100, 0);
         }
         else
         {
-            pos = worldPos - transform.position - new Vector3(0, fillAmount, 0);
+            pos = worldPos - transform.position - new Vector3(0, fillAmount/100, 0);
         }
         rend.sharedMaterial.SetVector("_FillAmount", pos);
     }

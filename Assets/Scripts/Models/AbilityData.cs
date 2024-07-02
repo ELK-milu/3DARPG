@@ -19,15 +19,15 @@ namespace Architecture.AbilitySystem
 		[Tooltip("存储技能消耗")]
 		public Vector2Int AbilityCost;
 
-		private PlayerEvent _playerEvent = new PlayerEvent();
+		private CharacterStatesEvent _characterStatesEvent = new CharacterStatesEvent();
 		/// <summary>
 		/// 技能释放存储的玩家事件
 		/// </summary>
 		/// <returns></returns>
-		public PlayerEvent PlayerEvent {
+		public CharacterStatesEvent CharacterStatesEvent {
 			get
 			{
-				return _playerEvent;
+				return _characterStatesEvent;
 			}
 		}
 
@@ -51,8 +51,8 @@ namespace Architecture.AbilitySystem
 
 		public void SetPlayerEvent (int healthCost, int manaCost)
 		{
-			_playerEvent.HealthCost = healthCost;
-			_playerEvent.ManaCost = manaCost;
+			_characterStatesEvent.HealthCost = healthCost;
+			_characterStatesEvent.ManaCost = manaCost;
 		}
 
 		public void SetAbilityEvent()

@@ -7,7 +7,7 @@ namespace Architecture.AbilitySystem
 	/// 技能栏View,所有相关的View处理方法都放在此类，由Controller调用
 	/// </summary>
 	[DefaultExecutionOrder(-2000)]
-	public class AbilityView : MVCView
+	public class AbilityView : MvcView
 	{
 		[SerializeField]
 		public AbilityButton[] Buttons;

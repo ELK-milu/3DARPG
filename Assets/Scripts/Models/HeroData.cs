@@ -7,20 +7,20 @@ namespace Character.Hero
 	public class HeroData:MonoBehaviour
 	{
 		private EventBinding<TestEvent> _textEventBinding;
-		private EventBinding<PlayerEvent> _playerEventBinding;
+		private EventBinding<CharacterStatesEvent> _playerEventBinding;
 
 		private void OnDisable()
 		{
 			EventBus<TestEvent>.DeRegister(_textEventBinding);
-			EventBus<PlayerEvent>.DeRegister(_playerEventBinding);
+			EventBus<CharacterStatesEvent>.DeRegister(_playerEventBinding);
 		}
 
 		private void OnEnable()
 		{
 			_textEventBinding = new EventBinding<TestEvent>(HandleTestEvent);
 			EventBus<TestEvent>.Register(_textEventBinding);
-			_playerEventBinding = new EventBinding<PlayerEvent>(HandlePlayerEvent);
-			EventBus<PlayerEvent>.Register(_playerEventBinding);		
+			_playerEventBinding = new EventBinding<CharacterStatesEvent>(HandlePlayerEvent);
+			EventBus<CharacterStatesEvent>.Register(_playerEventBinding);		
 		}
 
 		private void HandleTestEvent (TestEvent testEvent)
@@ -28,9 +28,9 @@ namespace Character.Hero
 			Debug.Log("TestEvent Received");
 		}
 
-		private void HandlePlayerEvent(PlayerEvent playerEvent)
+		private void HandlePlayerEvent(CharacterStatesEvent characterStatesEvent)
 		{
-			Debug.Log($"Hero HealthCost:{playerEvent.HealthCost},ManaCost:{playerEvent.ManaCost}");
+			Debug.Log($"Hero HealthCost:{characterStatesEvent.HealthCost},ManaCost:{characterStatesEvent.ManaCost}");
 		}
 
 	}

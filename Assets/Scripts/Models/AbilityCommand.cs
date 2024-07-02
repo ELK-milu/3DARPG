@@ -21,7 +21,7 @@ namespace CommandPattern.Commands
 
 		public void Execute()
 		{
-			EventBus<PlayerEvent>.Raise(_data.PlayerEvent);
+			EventBus<CharacterStatesEvent>.Raise(_data.CharacterStatesEvent);
 			EventBus<AbilityEvent>.Raise(_data.AbilityEvent);
 		}
 	}

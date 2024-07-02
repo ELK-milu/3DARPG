@@ -1,4 +1,4 @@
-﻿namespace Architecture.AbilitySystem
+﻿namespace Architecture
 {
 	public class DataContainer<T> where T : ModelData
 	{

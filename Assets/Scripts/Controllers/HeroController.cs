@@ -22,7 +22,7 @@ namespace Character.Hero
 			}
 			if (Input.GetKeyDown(KeyCode.D))
 			{
-				EventBus<PlayerEvent>.Raise(new PlayerEvent
+				EventBus<CharacterStatesEvent>.Raise(new CharacterStatesEvent
 				{
 					HealthCost = 100,
 					ManaCost = 100

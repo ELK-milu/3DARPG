@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace StatePattern.CharacterBase
+namespace StatePattern.CharBase
 {
 
 	#region 基类定义
@@ -10,24 +10,24 @@ namespace StatePattern.CharacterBase
 	/// <summary>
 	/// 角色状态基类
 	/// </summary>
-	public abstract class CharacterState : StateBehaviour { }
+	public abstract class CharState : StateBehaviour { }
 	/// <summary>
 	/// 角色状态上下文基类
 	/// </summary>
-	public class CharacterContext : ContextBehaviour { }
+	public class CharContext : ContextBehaviour { }
 	/// <summary>
 	/// 角色基类
 	/// </summary>
 	public class Character : MonoBehaviour
 	{
-		private CharacterContext _context;
-		public CharacterContext Context => _context;
+		private CharContext _context;
+		public CharContext Context => _context;
 		public Button StateChangeBtn;
 
 		private void Start()
 		{
 			var riginState = new IdleState();
-			_context = new CharacterContext();
+			_context = new CharContext();
 			_context.SetState(riginState);
 			var newState = new MoveState();
 			StateChangeBtn.onClick.AddListener(() => { ChangeState(newState); });
@@ -38,9 +38,9 @@ namespace StatePattern.CharacterBase
 			_context.Update();
 		}
 
-		public void ChangeState(CharacterState characterState)
+		public void ChangeState(CharState charState)
 		{
-			_context.ChangeState(characterState);
+			_context.ChangeState(charState);
 		}
 	}
 	#endregion
@@ -49,7 +49,7 @@ namespace StatePattern.CharacterBase
 	/// <summary>
 	/// 角色状态类IdleState
 	/// </summary>
-	public class IdleState : CharacterState
+	public class IdleState : CharState
 	{
 		public override void Update()
 		{
@@ -72,7 +72,7 @@ namespace StatePattern.CharacterBase
 	/// <summary>
 	/// 角色状态类MoveState
 	/// </summary>
-	public class MoveState : CharacterState
+	public class MoveState : CharState
 	{
 		public override void Update()
 		{

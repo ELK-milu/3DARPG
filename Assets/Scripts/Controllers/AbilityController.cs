@@ -14,7 +14,7 @@ namespace Architecture.AbilitySystem
 	/// AbilityView包含AbilityButton等UI脚本
 	/// </summary>
 	[DefaultExecutionOrder(-1900)]
-	public class AbilityController : MVCController<AbilityData,Ability,AbilityModel,AbilityView>
+	public class AbilityController : MvcController<AbilityData,Ability,AbilityModel,AbilityView>
 	{
 		/// <summary>
 		/// 技能触发的指令队列

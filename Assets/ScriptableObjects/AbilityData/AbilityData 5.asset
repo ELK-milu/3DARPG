@@ -16,4 +16,4 @@ MonoBehaviour:
   AnimationHash: 0
   Duration: 2
   Icon: {fileID: 21300000, guid: 9bc03a7357c08b3449fe3edce165e891, type: 3}
-  AbilityCost: {x: 10, y: 10}
+  AbilityCost: {x: -10, y: -10}

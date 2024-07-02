@@ -1,10 +1,10 @@
 ﻿using ObserverPattern.Observable;
 using System;
 
-namespace Architecture.AbilitySystem
+namespace Architecture
 {
 	
-	public class MVCModel<T1,T2> where T1 : ModelData where T2 : DataContainer<T1>
+	public class MvcModel<T1,T2> where T1 : ModelData where T2 : DataContainer<T1>
 	{
 		public readonly ObservableList<T2> DataContainers = new();
 		public Type GetDataType()

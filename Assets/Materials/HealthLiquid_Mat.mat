@@ -60,7 +60,7 @@ Material:
     - _Rim_Power: 2
     m_Colors:
     - _BottomColor: {r: 0.7830189, g: 0.033241354, b: 0.063969634, a: 1}
-    - _FoamColor: {r: 1, g: 0.6352848, b: 0.11792451, a: 1}
+    - _FoamColor: {r: 1, g: 0.63529414, b: 0.11764706, a: 1}
     - _Rim_Color: {r: 1, g: 0.5803922, b: 0.3443396, a: 1}
     - _TopColor: {r: 1, g: 0.37139377, b: 0.19339621, a: 1}
   m_BuildTextureStacks: []
