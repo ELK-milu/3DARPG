@@ -1,80 +1,124 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace StatePattern.StateSystem
 {
-	public class NullState : StateBehaviour
-	{
-		public override void Handle()
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override void Update()
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override void Enter()
-		{
-			throw new System.NotImplementedException();
-		}
-
-		public override void Exit()
-		{
-			throw new System.NotImplementedException();
-		}
-	}
 	public class StateMachine
 	{
-		private ContextBehaviour _contextBehaviour;
-		public ContextBehaviour ContextBehaviour => _contextBehaviour;
+		public StateNode CurrentState { get; private set; }
+		// 存储状态节点
+		Dictionary<Type,StateNode> _stateNodes = new Dictionary<Type, StateNode>();
+		// 存储需要转换状态的哈希表
+		HashSet<ITransition> _anyTransitions = new HashSet<ITransition>();
 
-		private NullState _nullState = new NullState();
-		private StateBehaviour _prevState= new NullState();
-		
-		public StateMachine (ContextBehaviour contextBehaviour)
+		public StateMachine (IState state)
 		{
-			_contextBehaviour = contextBehaviour;
+			SetState(state);
 		}
-		public StateMachine (ContextBehaviour contextBehaviour,StateBehaviour riginState)
-		{
-			_contextBehaviour = contextBehaviour;
-			_contextBehaviour.SetState(riginState);
-		}
-		
-		private Queue<StateBehaviour> _stateQueue = new Queue<StateBehaviour>();
-
-		public void StateEnQueue(StateBehaviour stateBehaviour)
-		{
-			_stateQueue.Enqueue(stateBehaviour);
-		}
-
-		public StateBehaviour StateDeQueue()
-		{
-			if (_stateQueue.Count > 0)
-			{
-				return _stateQueue.Dequeue();
-			}
-			else
-			{
-				return _nullState;
-			}
-		}
-
+		/// <summary>
+		/// 获取状态的函数在Update中执行
+		/// </summary>
 		public void Update()
 		{
-			_contextBehaviour.Update();
+			var transition = GetTransition();
+			if (transition != null)
+			{
+				ChangeState(transition.To);
+			}
+			CurrentState.State?.Update();
 		}
 
-		public void NextState()
+		public void FidedUpdate()
 		{
-			_prevState = _contextBehaviour.GetState();
-			_contextBehaviour.ChangeState(StateDeQueue());
+			CurrentState.State.FixedUpdate();
+		}
+
+		public void SetState (IState state)
+		{
+            CurrentState = GetOrAddNode(state);
+            CurrentState.State.OnEnter();
 		}
 		
-		public void PrevState()
+		public void ChangeState (IState state)
 		{
-			_contextBehaviour.ChangeState(_prevState);
+			if (state == CurrentState.State)	return;
+			CurrentState.State.OnExit();
+			CurrentState = _stateNodes[state.GetType()];
+			CurrentState.State.OnEnter();
+		}
+
+		/// <summary>
+		///  获取转换状态,以StateMachine中HashSet存储的状态优先,若触发则任意时刻都能转换,而StateNode的状态转换仅限内部存储的转换
+		/// </summary>
+		/// <returns></returns>
+		ITransition GetTransition()
+		{
+			ITransition thisTransition = null; 
+			foreach (var transition in _anyTransitions)
+			{
+				if (transition.Condition.Evaluate())
+				{
+					thisTransition = transition;
+					return thisTransition;
+				}
+			}
+
+
+			foreach (var transition in CurrentState.Transitions)
+			{
+				if (transition.Condition.Evaluate())
+				{
+					thisTransition = transition;
+					return thisTransition;
+				}
+			}
+			return thisTransition;
+		}
+
+		public void AddTransition (IState from,IState to, IPredicate condition)
+		{
+			GetOrAddNode(from).AddTransition(GetOrAddNode(to).State,condition);			
+		}
+
+		public void AddAnyTransition (IState to, IPredicate condition)
+		{
+			_anyTransitions.Add(new Transition(GetOrAddNode(to).State,condition));
+		}
+
+		private StateNode GetOrAddNode (IState state)
+		{
+			if (!_stateNodes.TryGetValue(state.GetType(),out var stateNode))
+			{
+				stateNode = new StateNode(state);
+				_stateNodes.Add(state.GetType(),stateNode);
+			}
+			return stateNode;
+		}
+
+		/// <summary>
+		/// 状态节点类包含了状态本身以及转换的其他状态,对比状态机,IState是节点，而ITransition代表了不同状态节点间转换的路径
+		/// </summary>
+		public class StateNode
+		{
+			public IState State { get; }
+			public HashSet<ITransition> Transitions { get; }
+
+			public StateNode(IState state)
+			{
+				State = state;
+				Transitions = new HashSet<ITransition>();
+			}
+			public void AddTransition(ITransition transition)
+			{
+				Transitions.Add(transition);
+			}
+
+			public void AddTransition (IState to, IPredicate condition)
+			{
+				Transitions.Add(new Transition(to, condition));
+			}
+        
 		}
 	}
+
 }

@@ -1,5 +1,5 @@
 {
-    "name": "3DARPG",
+    "name": "PlayerInputActions",
     "maps": [
         {
             "name": "Player",
@@ -27,6 +27,15 @@
                     "name": "Attack",
                     "type": "Button",
                     "id": "2b32b226-cd4c-45b7-a82c-d16e6c55bf1a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "MouseControlCamera",
+                    "type": "Button",
+                    "id": "db7bd60c-163a-42d6-9bbc-1467e31fbe45",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -251,6 +260,17 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "694d3b4d-8a50-48d6-bfdc-53d733a16fa0",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "MouseControlCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

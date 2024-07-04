@@ -762,6 +762,10 @@
       <Project>{14db90cb-a702-968b-3be8-6e5ea0ec2113}</Project>
       <Name>PPv2URPConverters</Name>
     </ProjectReference>
+    <ProjectReference Include="KBCore.Refs.csproj">
+      <Project>{8b547cfe-029a-f953-58d3-d9a104eb3dee}</Project>
+      <Name>KBCore.Refs</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.TextMeshPro.Editor.csproj">
       <Project>{961ac3f1-8cd2-8ad4-d196-082e68df77d7}</Project>
       <Name>Unity.TextMeshPro.Editor</Name>
@@ -858,9 +862,17 @@
       <Project>{c2394e6d-42ef-7a77-5451-7aaa75f0a585}</Project>
       <Name>Unity.ShaderGraph.Editor</Name>
     </ProjectReference>
+    <ProjectReference Include="Cinemachine.csproj">
+      <Project>{5500326f-cd8c-d44c-461c-ac29ba3f3812}</Project>
+      <Name>Cinemachine</Name>
+    </ProjectReference>
     <ProjectReference Include="Unity.Burst.csproj">
       <Project>{df68dc41-bae2-5893-a188-d32b0b9c8741}</Project>
       <Name>Unity.Burst</Name>
+    </ProjectReference>
+    <ProjectReference Include="com.unity.cinemachine.editor.csproj">
+      <Project>{92518a18-4125-cbaf-322b-97e95ac1b7d0}</Project>
+      <Name>com.unity.cinemachine.editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.Universal.Editor.csproj">
       <Project>{e2b7006b-e1f3-17ae-d946-f201b01db039}</Project>
