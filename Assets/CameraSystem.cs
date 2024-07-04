@@ -10,6 +10,7 @@ using UnityEngine;
 public class CameraSystem : ValidatedMonoBehaviour
 {
 	[SerializeField, Anywhere] InputReader _input;
+	[SerializeField, Anywhere] PlayerController _player;
 	[SerializeField,Child]public Camera MainCamera;
 	[SerializeField,Child]public CinemachineFreeLook ThirdPersonCamera;
 	[SerializeField,Child]public CinemachineVirtualCamera FirstPersonCamera;
@@ -19,10 +20,15 @@ public class CameraSystem : ValidatedMonoBehaviour
         
 	public event Action<Type> OnEnterCameraStateHandler = delegate {  };
 	
-	bool isRMBPressed;
+	bool isCameraLocked = false;
 	bool cameraMovementLock;
 	private void Awake()
 	{
+		var _playerTrans = _player.transform;
+		ThirdPersonCamera.Follow = _playerTrans;
+		ThirdPersonCamera.LookAt = _playerTrans;
+		ThirdPersonCamera.OnTargetObjectWarped(_playerTrans,_playerTrans.position - ThirdPersonCamera.transform.position - Vector3.forward);
+		
 		var FreeLookState = new ThirdPersonCameraState(this);
 		var FirstPersonState = new FirstPersonCameraState(this);
 		StateMachine = new StateMachine(FirstPersonState);
@@ -34,6 +40,8 @@ public class CameraSystem : ValidatedMonoBehaviour
 			() => Input.GetKeyDown(KeyCode.F3)&&
 			      StateMachine.CurrentState.State.GetType() == FirstPersonState.GetType()
 		));
+		
+		
 	}
 
 	#region MonoBehaviour
@@ -48,14 +56,12 @@ public class CameraSystem : ValidatedMonoBehaviour
 	void OnEnable()
 	{
 		_input.OnLookHandler += OnThirdPersonLook;
-		_input.OnEnableMouseControlCameraHandler += OnEnableMouseControlCamera;
-		_input.OnDisableMouseControlCameraHandler += OnDisableMouseControlCamera;
+		_input.OnLockCameraHandler += OnLockCamera;
 	}
         
 	void OnDisable() {
 		_input.OnLookHandler -= OnThirdPersonLook;
-		_input.OnEnableMouseControlCameraHandler -= OnEnableMouseControlCamera;
-		_input.OnDisableMouseControlCameraHandler -= OnDisableMouseControlCamera;
+		_input.OnLockCameraHandler -= OnLockCamera;
 	}
 	#endregion
 
@@ -79,7 +85,7 @@ public class CameraSystem : ValidatedMonoBehaviour
 	}
 
 	#region settings
-		public void SetCullingMask(string[] culls)
+	public void SetCullingMask(string[] culls)
 	{
 		// 输入验证：检查数组是否为空
 		if (culls == null || culls.Length == 0)
@@ -99,7 +105,6 @@ public class CameraSystem : ValidatedMonoBehaviour
 			if (layerIndex >= 0 && layerIndex < 32) // 确保层索引在有效范围内
 			{
 				validMask &= ~(1 << layerIndex);
-				Debug.Log($"剔除: {layerName}. 层级{layerIndex}.");
 			}
 			else
 			{
@@ -180,7 +185,7 @@ public class CameraSystem : ValidatedMonoBehaviour
 	{
 		if (cameraMovementLock) return;
             
-		if (isDeviceMouse && !isRMBPressed) return;
+		if (isDeviceMouse && !isCameraLocked) return;
 
 		// If the device is mouse use fixedDeltaTime, otherwise use deltaTime
 		float deviceMultiplier = isDeviceMouse ? Time.fixedDeltaTime : Time.deltaTime;
@@ -194,7 +199,7 @@ public class CameraSystem : ValidatedMonoBehaviour
 	{
 		if (cameraMovementLock) return;
             
-		if (isDeviceMouse && !isRMBPressed) return;
+		if (isDeviceMouse && !isCameraLocked) return;
 
 		// If the device is mouse use fixedDeltaTime, otherwise use deltaTime
 		float deviceMultiplier = isDeviceMouse ? Time.fixedDeltaTime : Time.deltaTime;
@@ -203,18 +208,32 @@ public class CameraSystem : ValidatedMonoBehaviour
 		FirstPersonCamera.transform.localRotation = Quaternion.Euler(cameraMovement.x * speedMultiplier * deviceMultiplier, 0f, 0f);
 	}
 	
-	void OnEnableMouseControlCamera() {
-		isRMBPressed = true;
+	void OnLockCamera()
+	{
+		if (isCameraLocked)
+		{
+			isCameraLocked = false;
+			cameraMovementLock = false;
+			// Unlock the cursor and make it visible
+			Cursor.lockState = CursorLockMode.None;
+			Cursor.visible = true;
             
-		// Lock the cursor to the center of the screen and hide it
-		Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;
-            
-		StartCoroutine(DisableMouseForFrame());
+			// Reset the camera axis to prevent jumping when re-enabling mouse control
+			ThirdPersonCamera.m_XAxis.m_InputAxisValue = 0f;
+			ThirdPersonCamera.m_YAxis.m_InputAxisValue = 0f;
+		}
+		else
+		{
+			isCameraLocked = true;
+			cameraMovementLock = true;
+			// Lock the cursor to the center of the screen and hide it
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
+		}
 	}
 
 	void OnDisableMouseControlCamera() {
-		isRMBPressed = false;
+		isCameraLocked = false;
             
 		// Unlock the cursor and make it visible
 		Cursor.lockState = CursorLockMode.None;

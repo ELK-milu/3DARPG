@@ -33,7 +33,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MouseControlCamera",
+                    "name": "LockCamera",
                     "type": "Button",
                     "id": "db7bd60c-163a-42d6-9bbc-1467e31fbe45",
                     "expectedControlType": "Button",
@@ -266,11 +266,11 @@
                 {
                     "name": "",
                     "id": "694d3b4d-8a50-48d6-bfdc-53d733a16fa0",
-                    "path": "<Mouse>/rightButton",
+                    "path": "<Keyboard>/t",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "MouseControlCamera",
+                    "action": "LockCamera",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

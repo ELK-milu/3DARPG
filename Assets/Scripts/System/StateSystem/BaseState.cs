@@ -12,6 +12,8 @@ namespace StatePattern.PlayerState
 
 		protected static readonly int LocomotionHash = Animator.StringToHash("Locomotion");
 		protected static readonly int JumpHash = Animator.StringToHash("Jump");
+		
+		protected const float CROSS_FADE_DURATION = 0.1f;
 
 		/// <summary>
 		/// 存储了动画的哈希值和过渡时长的字典
@@ -44,6 +46,30 @@ namespace StatePattern.PlayerState
 		public virtual void OnExit()
 		{
 			// noop
+		}
+	}
+	public class LocomotionState : BasePlayerState
+	{
+		public LocomotionState (PlayerController playerController, Animator animator) : base(playerController, animator)
+		{
+		}
+
+		public override void OnEnter()
+		{
+			_animator.CrossFade(LocomotionHash,CROSS_FADE_DURATION);
+		}
+
+		public override void Update()
+		{
+		}
+
+		public override void FixedUpdate()
+		{
+		}
+
+		public override void OnExit()
+		{
+			
 		}
 	}
 }

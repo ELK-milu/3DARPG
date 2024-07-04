@@ -22,7 +22,6 @@ public class SphereLiquid:Liquid
         float source = (float)(fillAmount * -0.8f) + 89.6f;
         float desAddition = (float)(source - addition - 89.6) / (-0.8f);
         float des = Mathf.Clamp(desAddition, -13, 112);
-        Debug.Log($"消耗值{addition},总值{source},映射值{des},晃动{ShakeStrength}");
         if (FillTween != null)
         {
             DOTween.Kill(FillTween);

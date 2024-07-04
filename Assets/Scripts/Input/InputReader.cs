@@ -16,8 +16,7 @@ namespace InputSystem
 		/// 无参委托只需在按键时触发事件即可
 		/// </summary>
 		public event Action OnAttackHandler = delegate {  };
-		public event Action OnEnableMouseControlCameraHandler = delegate {  };
-		public event Action OnDisableMouseControlCameraHandler = delegate {  };
+		public event Action OnLockCameraHandler = delegate {  };
 
 		private static PlayerInputActions _playerInputActions;
 		public object locker { get; set; }
@@ -72,17 +71,12 @@ namespace InputSystem
 			OnAttackHandler.Invoke();
 		}
 
-		public void OnMouseControlCamera (InputAction.CallbackContext context)
+		public void OnLockCamera (InputAction.CallbackContext context)
 		{
 			switch (context.phase)
 			{
 				case InputActionPhase.Started:
-					OnEnableMouseControlCameraHandler.Invoke();
-					break;
-				case InputActionPhase.Canceled:
-					OnDisableMouseControlCameraHandler.Invoke();
-					break;
-				default:
+					OnLockCameraHandler.Invoke();
 					break;
 			}
 		}

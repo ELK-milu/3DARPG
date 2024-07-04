@@ -29,26 +29,24 @@ namespace InputSystem
 		public CharacterStateData HeroStateData;
 		[SerializeField]
 		private float _rotationSpeed = 15f;
+		[SerializeField]
+		private float _smoothTime = 0f;
 
-		private Transform _mainCamTrans;
 		private Transform _playerTrans;
 		private float _currentSpeed = 0f;
 		private float _velocity = 0f;
-		[SerializeField]
-		private float _smoothTime = 0f;
-		
-		private const float ZERO_F = 0f;
+		private bool _isFirstPersonMode = true;
 
-		public bool isFirstPersonMode = true;
+		private const float ZERO_F = 0f;
+		
+		// Animator parameters
+		private static readonly int Speed = Animator.StringToHash("Speed");
+
 
 		#region MonoBehaviour
 		private void Awake()
 		{
-			_mainCamTrans = Camera.main.transform;
 			_playerTrans = transform;
-			_freeLookCam.Follow = _playerTrans;
-			_freeLookCam.LookAt = _playerTrans;
-			_freeLookCam.OnTargetObjectWarped(_playerTrans,_playerTrans.position - _freeLookCam.transform.position - Vector3.forward);
 		}
 
 		private void OnEnable()
@@ -72,40 +70,42 @@ namespace InputSystem
 			UpdateAnimator();
 		}
 		#endregion
+
+		#region 移动计算
 		
 		/// <summary>
 		/// TODO: 需要重构的方法，将摄像机视角处理放于CameraState的Update中
+		/// 移动计算
 		/// </summary>
 		/// <param name="cameraState"></param>
 		public void OnCameraMode(Type cameraState)
 		{
 			if (cameraState == typeof(FirstPersonCameraState))
 			{
-				isFirstPersonMode = true;
+				_isFirstPersonMode = true;
 			}
 			else if(cameraState == typeof(ThirdPersonCameraState))
 			{
-				isFirstPersonMode = false;
+				_isFirstPersonMode = false;
 			}
 		}
 
 		private void UpdateAnimator()
 		{
+			if (_animator == null) return;
+			_animator.SetFloat(Speed, _currentSpeed);
 		}
 		
 
 		private void OnMovement()
 		{
-			// 检查_input.Direction的有效性
-			if (_input == null || _input.Direction == null) return;
 			// 如何将下列的输入方向转化为角色当前朝向的方向
 			var inputVector = new Vector3(_input.Direction.x, 0f, _input.Direction.y);
 			var inputDirection = (inputVector).normalized;
 			inputDirection = Vector3.ClampMagnitude(inputDirection, 1f); // 确保输入向量的长度不超过1
 			// 根据视角模式选择计算方式
-			bool isFirstPersonMode = _cameraSystem.StateMachine.CurrentState.State.GetType() == typeof(FirstPersonCameraState);
-			Vector3 adjustedDirection = CalculateAdjustedDirection(inputDirection,isFirstPersonMode);
-			if (isFirstPersonMode)
+			Vector3 adjustedDirection = CalculateAdjustedDirection(inputDirection,_isFirstPersonMode);
+			if (_isFirstPersonMode)
 			{
 				var cameraRotation = _cameraSystem.MainCamera.transform.rotation;
 
@@ -114,7 +114,7 @@ namespace InputSystem
 			// 确保有有效的移动方向
 			if (adjustedDirection.magnitude > ZERO_F)
 			{
-				if (!isFirstPersonMode)
+				if (!_isFirstPersonMode)
 				{
 					CalculateRotation(adjustedDirection); // 假设CalculateRotation()需要根据移动方向调整角色朝向
 				}
@@ -160,6 +160,11 @@ namespace InputSystem
 		{
 			_currentSpeed = Mathf.SmoothDamp(_currentSpeed, targetVelocity, ref _velocity, _smoothTime);
 		}
+		#endregion
+
+		#region 状态切换
+		
+		#endregion
 
 	}
 }

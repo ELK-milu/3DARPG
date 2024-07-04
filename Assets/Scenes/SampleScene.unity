@@ -632,8 +632,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _input: {fileID: 11400000, guid: 8745c09705e0a7044b8d4e775253e95b, type: 2}
+  _player: {fileID: 7647134204793611581}
   MainCamera: {fileID: 963194227}
-  FreeLookCamera: {fileID: 496612408}
+  ThirdPersonCamera: {fileID: 496612408}
   FirstPersonCamera: {fileID: 956873131}
   speedMultiplier: 1
 --- !u!1 &421490698
