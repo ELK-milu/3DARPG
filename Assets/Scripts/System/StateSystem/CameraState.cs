@@ -1,4 +1,5 @@
-﻿using StatePattern.StateSystem;
+﻿using Game.EntitySystem;
+using StatePattern.StateSystem;
 using System;
 
 namespace StatePattern.CameraState
@@ -6,10 +7,12 @@ namespace StatePattern.CameraState
 	public class CameraState : IState
 	{
 		protected CameraSystem _cameraSystem;
+		protected PlayerController _playerController;
 
-		public CameraState (CameraSystem cameraSystem)
+		public CameraState (CameraSystem cameraSystem,PlayerController playerController)
 		{
 			_cameraSystem = cameraSystem;
+			_playerController = playerController;
 		}
 		
 		public virtual void OnEnter()
@@ -36,7 +39,7 @@ namespace StatePattern.CameraState
 
 	public class ThirdPersonCameraState : CameraState
 	{
-		public ThirdPersonCameraState (CameraSystem cameraSystem) : base(cameraSystem)
+		public ThirdPersonCameraState (CameraSystem cameraSystem,PlayerController playerController) : base(cameraSystem,playerController)
 		{
 		}
 
@@ -65,7 +68,7 @@ namespace StatePattern.CameraState
 
 	public class FirstPersonCameraState : CameraState
 	{
-		public FirstPersonCameraState (CameraSystem cameraSystem) : base(cameraSystem)
+		public FirstPersonCameraState (CameraSystem cameraSystem,PlayerController playerController) : base(cameraSystem,playerController)
 		{
 		}
 

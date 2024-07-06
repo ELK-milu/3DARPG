@@ -11,5 +11,7 @@ namespace EventPattern.PlayerEvent
 	{
 		public int HealthCost;
 		public int ManaCost;
+		//public int StaminaCost;
+
 	}
 }

@@ -1,4 +1,4 @@
-﻿using InputSystem;
+﻿using Game.EntitySystem;
 using StatePattern.StateSystem;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,26 +27,14 @@ namespace StatePattern.PlayerState
 			_playerController = playerController;
 			_animator = animator;
 		}
-		
-		public virtual void OnEnter()
-		{
-			// noop
-		}
 
-		public virtual void Update()
-		{
-			// noop
-		}
+		public abstract void OnEnter();
 
-		public virtual void FixedUpdate()
-		{
-			// noop
-		}
+		public abstract void Update();
 
-		public virtual void OnExit()
-		{
-			// noop
-		}
+		public abstract void FixedUpdate();
+
+		public abstract void OnExit();
 	}
 	public class LocomotionState : BasePlayerState
 	{
@@ -65,6 +53,8 @@ namespace StatePattern.PlayerState
 
 		public override void FixedUpdate()
 		{
+			_playerController.OnMovement();
+			_playerController.OnDashMovement();
 		}
 
 		public override void OnExit()
@@ -72,4 +62,29 @@ namespace StatePattern.PlayerState
 			
 		}
 	}
+
+	public class JumpState : BasePlayerState
+	{
+		public JumpState(PlayerController playerController, Animator animator) : base(playerController, animator) { }
+
+		public override void OnEnter()
+		{
+			_animator.CrossFade(JumpHash, CROSS_FADE_DURATION);
+		}
+
+		public override void Update()
+		{
+		}
+
+		public override void FixedUpdate()
+		{
+			_playerController.OnMovement();
+			_playerController.OnJumpMovement();
+		}
+
+		public override void OnExit()
+		{
+		}
+	}
+
 }

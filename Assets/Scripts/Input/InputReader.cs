@@ -17,6 +17,9 @@ namespace InputSystem
 		/// </summary>
 		public event Action OnAttackHandler = delegate {  };
 		public event Action OnLockCameraHandler = delegate {  };
+		public event Action<bool> OnJumpHandler = delegate {  };
+		public event Action<bool> OnDashHandler = delegate {  };
+
 
 		private static PlayerInputActions _playerInputActions;
 		public object locker { get; set; }
@@ -53,12 +56,12 @@ namespace InputSystem
 
 		public void OnMove (InputAction.CallbackContext context)
 		{
-			OnMoveHandler.Invoke(context.ReadValue<Vector2>());
+			OnMoveHandler?.Invoke(context.ReadValue<Vector2>());
 		}
 
 		public void OnLook (InputAction.CallbackContext context)
 		{
-			OnLookHandler.Invoke(context.ReadValue<Vector2>(),IsDeviceMouse(context));
+			OnLookHandler?.Invoke(context.ReadValue<Vector2>(),IsDeviceMouse(context));
 		}
 
 		private bool IsDeviceMouse (InputAction.CallbackContext context)
@@ -68,7 +71,7 @@ namespace InputSystem
 
 		public void OnAttack (InputAction.CallbackContext context)
 		{
-			OnAttackHandler.Invoke();
+			OnAttackHandler?.Invoke();
 		}
 
 		public void OnLockCamera (InputAction.CallbackContext context)
@@ -76,7 +79,36 @@ namespace InputSystem
 			switch (context.phase)
 			{
 				case InputActionPhase.Started:
-					OnLockCameraHandler.Invoke();
+					OnLockCameraHandler?.Invoke();
+					break;
+			}
+		}
+
+		public void OnJump (InputAction.CallbackContext context)
+		{
+			switch (context.phase)
+			{
+				case InputActionPhase.Started:
+					OnJumpHandler?.Invoke(true);
+					break;
+				case InputActionPhase.Canceled:
+					OnJumpHandler?.Invoke(false);
+					break;
+			}
+		}
+
+		public void OnDash (InputAction.CallbackContext context)
+		{
+			switch (context.phase)
+			{
+				case  InputActionPhase.Started:
+					OnDashHandler?.Invoke(true);
+					break;
+				case  InputActionPhase.Performed:
+					OnDashHandler?.Invoke(true);
+					break;
+				case InputActionPhase.Canceled:
+					OnDashHandler?.Invoke(false);
 					break;
 			}
 		}

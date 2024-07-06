@@ -30,21 +30,21 @@ namespace StatePattern.StateSystem
 
 		public void FidedUpdate()
 		{
-			CurrentState.State.FixedUpdate();
+			CurrentState.State?.FixedUpdate();
 		}
 
 		public void SetState (IState state)
 		{
             CurrentState = GetOrAddNode(state);
-            CurrentState.State.OnEnter();
+            CurrentState.State?.OnEnter();
 		}
 		
 		public void ChangeState (IState state)
 		{
 			if (state == CurrentState.State)	return;
-			CurrentState.State.OnExit();
+			CurrentState.State?.OnExit();
 			CurrentState = _stateNodes[state.GetType()];
-			CurrentState.State.OnEnter();
+			CurrentState.State?.OnEnter();
 		}
 
 		/// <summary>

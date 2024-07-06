@@ -9,6 +9,7 @@ namespace Utilities {
 		public float Progress => Time / initialTime;
         
 		public Action OnTimerStart = delegate { };
+		public Action OnTimer = delegate { };
 		public Action OnTimerStop = delegate { };
 
 		protected Timer(float value) {
@@ -33,6 +34,8 @@ namespace Utilities {
         
 		public void Resume() => IsRunning = true;
 		public void Pause() => IsRunning = false;
+		public float GetTime() => Time;
+		public float GetInitialTime() => initialTime;
         
 		public abstract void Tick(float deltaTime);
 	}
@@ -43,6 +46,7 @@ namespace Utilities {
 		public override void Tick(float deltaTime) {
 			if (IsRunning && Time > 0) {
 				Time -= deltaTime;
+				OnTimer.Invoke();
 			}
             
 			if (IsRunning && Time <= 0) {
@@ -58,6 +62,16 @@ namespace Utilities {
 			initialTime = newTime;
 			Reset();
 		}
+		
+		public void ResetNowTime(float newTime,bool isStart = false) {
+			Time = newTime;
+			if(!isStart) return;
+			if (!IsRunning) {
+				IsRunning = true;
+				OnTimerStart.Invoke();
+			}
+		}
+		
 	}
     
 	public class RecordTimer : Timer {
@@ -71,6 +85,5 @@ namespace Utilities {
         
 		public void Reset() => Time = 0;
         
-		public float GetTime() => Time;
 	}
 }

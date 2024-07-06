@@ -12,12 +12,35 @@ namespace Architecture.StateSystem
 	public class CharacterStateData : ModelData
 	{
 		[Tooltip("角色的Buff状态列表")]
-		public List<StatusCondition> StatusConditions;
+		public HashSet<StatusCondition> StatusConditions;
 		[Tooltip("角色的属性")]
+		[SerializeField]
 		public Attribution CharacterAttribution;
 		// 触发的事件
 		[FormerlySerializedAs("PlayerEvent")]
 		public CharacterStatesEvent characterStatesEvent = new CharacterStatesEvent();
+
+		private void Awake()
+		{
+			ResetAttribution();
+		}
+
+		public void ResetAttribution()
+		{
+			StatusConditions = new HashSet<StatusCondition>();
+			CharacterAttribution.CurrentHealth = CharacterAttribution.MaxHealth;
+			CharacterAttribution.CurrentMana = CharacterAttribution.MaxMana;
+			CharacterAttribution.CurrentStamina = CharacterAttribution.MaxStamina;
+		}
+
+		public void Update()
+		{
+			if(StatusConditions == null) return;
+			foreach (var status in StatusConditions)
+			{
+				status?.Execute();	
+			}
+		}
 
 	}
 }

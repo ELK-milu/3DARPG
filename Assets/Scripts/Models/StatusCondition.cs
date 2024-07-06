@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game.EntitySystem;
+using System;
 
 namespace Architecture.StateSystem
 {
@@ -14,6 +15,9 @@ namespace Architecture.StateSystem
 		public float ContinueTime;
 		private bool Disposed; // 用于跟踪资源是否已经被释放
 
+		public StatusCondition()
+		{
+		}
 		public StatusCondition(float continueTime)
 		{
 			ContinueTime = continueTime;
@@ -21,7 +25,7 @@ namespace Architecture.StateSystem
 		
 		public void OnStatus()
 		{
-			if (ContinueTime > 0 && Disposed)
+			if (ContinueTime > 0)
 			{
 				Disposed = false;
 				Execute();
@@ -41,10 +45,31 @@ namespace Architecture.StateSystem
 		{
 			return Disposed;
 		}
-		
-		public void Dispose()
+
+		public abstract void Dispose();
+	}
+
+	public abstract class CharacterStateCondition : StatusCondition
+	{
+		protected PlayerController _playerController;
+		public CharacterStateCondition (float continueTime, PlayerController playerController)
 		{
-			Disposed = true;
+			base.ContinueTime = continueTime;
+			_playerController = playerController;
+		}
+	}
+
+	public class ExhuastedCondition : CharacterStateCondition
+	{
+		public ExhuastedCondition(float continueTime, PlayerController playerController) : base(continueTime, playerController) { }
+		public override void Execute()
+		{
+			_playerController.DisableDash = true;
+		}
+
+		public override void Dispose()
+		{
+			_playerController.DisableDash = false;
 		}
 	}
 }

@@ -8,34 +8,34 @@ public class Liquid : MonoBehaviour
     public UpdateMode updateMode;
 
     [SerializeField]
-    float MaxWobble = 0.03f;
+    protected float MaxWobble = 0.03f;
     [SerializeField]
-    float WobbleSpeedMove = 1f;
+    protected float WobbleSpeedMove = 1f;
     [SerializeField]
     protected float fillAmount = 50f;
     [SerializeField]
-    float Recovery = 1f;
+    protected float Recovery = 1f;
     [SerializeField]
-    float Thickness = 1f;
+    protected float Thickness = 1f;
     [Range(0, 1)]
     public float CompensateShapeAmount;
     [SerializeField]
-    Mesh mesh;
+    protected Mesh mesh;
     [SerializeField]
-    Renderer rend;
-    Vector3 pos;
-    Vector3 lastPos;
-    Vector3 velocity;
-    Quaternion lastRot;
-    Vector3 angularVelocity;
-    float wobbleAmountX;
-    float wobbleAmountZ;
-    float wobbleAmountToAddX;
-    float wobbleAmountToAddZ;
-    float pulse;
-    float sinewave;
-    float time = 0.5f;
-    Vector3 comp;
+    protected Renderer rend;
+    protected Vector3 pos;
+    protected Vector3 lastPos;
+    protected Vector3 velocity;
+    protected Quaternion lastRot;
+    protected Vector3 angularVelocity;
+    protected float wobbleAmountX;
+    protected float wobbleAmountZ;
+    protected float wobbleAmountToAddX;
+    protected float wobbleAmountToAddZ;
+    protected float pulse;
+    protected float sinewave;
+    protected float time = 0.5f;
+    protected Vector3 comp;
 
     // Use this for initialization
     void Start()
@@ -67,7 +67,7 @@ public class Liquid : MonoBehaviour
         }
     }
     
-    void GetMeshAndRend()
+    public virtual void GetMeshAndRend()
     {
         if (mesh == null)
         {
@@ -78,7 +78,7 @@ public class Liquid : MonoBehaviour
             rend = GetComponent<Renderer>();
         }
     }
-    void Update()
+    public virtual void Update()
     {
         float deltaTime = 0;
         switch (updateMode)
@@ -135,7 +135,7 @@ public class Liquid : MonoBehaviour
         lastRot = transform.rotation;
     }
 
-    void UpdatePos(float deltaTime)
+    protected virtual void UpdatePos(float deltaTime)
     {
 
         Vector3 worldPos = transform.TransformPoint(new Vector3(mesh.bounds.center.x, mesh.bounds.center.y, mesh.bounds.center.z));

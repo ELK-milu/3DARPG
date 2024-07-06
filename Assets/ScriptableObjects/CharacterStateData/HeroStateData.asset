@@ -7,8 +7,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43657c78e77d405aade14c4eb469f7c0, type: 3}
-  m_Name: CharacterStateData
+  m_Name: HeroStateData
   m_EditorClassIdentifier: 
+  CharacterAttribution:
+    MaxHealth: 100
+    MaxMana: 100
+    MaxStamina: 5
+    StaminaRecoverSpeed: 0
+    Physical: 0
+    Magical: 0
+    Attack: 0
+    Intellect: 0
+    Defence: 0
+    Agile: 0
+    Luck: 0
+    CurrentStamina: 20.00663
+    CurrentHealth: 100
+    CurrentMana: 100

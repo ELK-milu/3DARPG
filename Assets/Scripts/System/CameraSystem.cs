@@ -1,4 +1,5 @@
 using Cinemachine;
+using Game.EntitySystem;
 using InputSystem;
 using KBCore.Refs;
 using StatePattern.CameraState;
@@ -18,7 +19,7 @@ public class CameraSystem : ValidatedMonoBehaviour
 	[Header("Settings")] 
 	[SerializeField, Range(0.5f, 3f)] float speedMultiplier = 1f;
         
-	public event Action<Type> OnEnterCameraStateHandler = delegate {  };
+	public event Action<Type> OnEnterCameraStateHandler = delegate (Type type) { };
 	
 	bool isCameraLocked = false;
 	bool cameraMovementLock;
@@ -29,18 +30,18 @@ public class CameraSystem : ValidatedMonoBehaviour
 		ThirdPersonCamera.LookAt = _playerTrans;
 		ThirdPersonCamera.OnTargetObjectWarped(_playerTrans,_playerTrans.position - ThirdPersonCamera.transform.position - Vector3.forward);
 		
-		var FreeLookState = new ThirdPersonCameraState(this);
-		var FirstPersonState = new FirstPersonCameraState(this);
+		var FreeLookState = new ThirdPersonCameraState(this,_player);
+		var FirstPersonState = new FirstPersonCameraState(this,_player);
 		StateMachine = new StateMachine(FirstPersonState);
-		At(FreeLookState, FirstPersonState, new FuncPredicate(
+		StateMachine.At(FreeLookState, FirstPersonState, new FuncPredicate(
 			() => Input.GetKeyDown(KeyCode.F3)&&
 			      StateMachine.CurrentState.State.GetType() == FreeLookState.GetType()
 		));
-		At(FirstPersonState, FreeLookState, new FuncPredicate(
+		StateMachine.At(FirstPersonState, FreeLookState, new FuncPredicate(
 			() => Input.GetKeyDown(KeyCode.F3)&&
 			      StateMachine.CurrentState.State.GetType() == FirstPersonState.GetType()
 		));
-		
+		_player.OnCameraMode(StateMachine.CurrentState.State.GetType());
 		
 	}
 
@@ -68,21 +69,11 @@ public class CameraSystem : ValidatedMonoBehaviour
 	#region 相机事件
 	public void OnEnterCameraPerson()
 	{
-		OnEnterCameraStateHandler.Invoke(StateMachine.CurrentState.State.GetType());
+		OnEnterCameraStateHandler?.Invoke(StateMachine?.CurrentState.State.GetType());
 	}
 
 	#endregion
 
-	
-	void At (IState from, IState to, IPredicate condition)
-	{
-		StateMachine.AddTransition(from, to, condition);
-	}
-
-	void Any (IState to, IPredicate condition)
-	{
-		StateMachine.AddAnyTransition(to, condition);
-	}
 
 	#region settings
 	public void SetCullingMask(string[] culls)
